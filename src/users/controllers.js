@@ -14,6 +14,15 @@ const signup = async (req, res) => {
   }
 };
 
+const getAllUsers = async (re, res) => {
+  try {
+    const users = await User.findAll();
+    res.status(200).json({ message: "Here are all the users: ", users: users });
+  } catch (error) {
+    res.status(500).json({ message: error.message, error: error });
+  }
+};
+
 const login = async (req, res) => {
   try {
     res.status(200).json({ message: "login successful", user: req.user });
@@ -24,5 +33,6 @@ const login = async (req, res) => {
 
 module.exports = {
   signup: signup,
+  getAllUsers: getAllUsers,
   login: login,
 };
