@@ -14,6 +14,15 @@ const signup = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  try {
+    res.status(200).json({ message: "login successful", user: req.user });
+  } catch (error) {
+    res.status(500).json({ message: error.message, error: error });
+  }
+};
+
 module.exports = {
   signup: signup,
+  login: login,
 };
