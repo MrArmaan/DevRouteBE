@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(userRouter);
+// app.use(userRouter);
 
 const syncTables = async () => {
   User.sync();
