@@ -1,13 +1,15 @@
 const { Router } = require("express");
 const userRouter = Router();
 
-const { signup, login, getAllUsers } = require("./controllers");
-
 const { hashPass, comparePass } = require("../middleware/auth");
+
+const { signup, login, getAllUsers, getUser } = require("./controllers");
 
 userRouter.post("/users/signup", signup);
 
 userRouter.post("/users/login", login);
+
+userRouter.get("/users/getUser", getUser);
 
 userRouter.get("/users/getAllUsers", getAllUsers);
 
