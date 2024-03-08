@@ -47,7 +47,9 @@ const comparePass = async (req, res, next) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+//////////////////////////
 
+////////////////////////
 module.exports = {
   hashPass: hashPass,
   comparePass: comparePass,

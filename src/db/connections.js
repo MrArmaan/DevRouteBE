@@ -7,3 +7,5 @@ sequelize.authenticate();
 console.log("db  is working");
 
 module.exports = sequelize;
+
+/////////////////////////////////
