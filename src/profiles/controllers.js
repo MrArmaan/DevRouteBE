@@ -1,3 +1,4 @@
+const User = require("../users/model");
 const Profile = require("./model");
 const express = require("express");
 const router = express.Router();
@@ -9,7 +10,11 @@ const addProfile = async (req, res) => {
       profile2: req.body.profile2,
       profile3: req.body.profile3,
     });
-    res.status(201).json({ message: "profile added", profile: profile });
+    const updatedUser = await User.update(
+      { ProfileId: profile.id },
+      { where: { id: req.user.id } }
+    );
+    res.status(201).json({ message: "Welcome New User!", profile: profile });
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
   }
