@@ -16,4 +16,4 @@ const Profile = sequelize.define("Profile", {
   },
 });
 
-module.exports = User;
+module.exports = Profile;

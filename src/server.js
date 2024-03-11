@@ -1,7 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const User = require("./users/model");
+const Profile = require("./profiles/model");
 const userRouter = require("./users/routes");
+const profileRouter = require("./profiles/routes");
 const cors = require("cors");
 
 const port = process.env.PORT || 5001;
@@ -13,8 +15,13 @@ app.use(cors());
 app.use(express.json());
 
 app.use(userRouter);
+app.use(profileRouter);
 
 const syncTables = async () => {
+  User.hasOne(Profile);
+  Profile.belongsTo(User);
+
+  Profile.sync();
   User.sync();
 };
 
