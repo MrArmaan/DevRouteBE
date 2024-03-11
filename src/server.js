@@ -18,8 +18,8 @@ app.use(userRouter);
 app.use(profileRouter);
 
 const syncTables = async () => {
-  User.hasOne(Profile);
-  Profile.belongsTo(User);
+  Profile.hasOne(User);
+  User.belongsTo(Profile);
 
   Profile.sync();
   User.sync();

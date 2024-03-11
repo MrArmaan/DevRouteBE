@@ -17,7 +17,7 @@ const addProfile = async (req, res) => {
 
 const getAllProfiles = async (req, res) => {
   try {
-    const profile = await User.findAll();
+    const profile = await Profile.findAll();
     res
       .status(200)
       .json({ message: "Here are all the Profiles: ", profile: profile });
