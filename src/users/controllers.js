@@ -2,7 +2,7 @@ const User = require("./model");
 const express = require("express");
 const router = express.Router();
 
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
   try {
     const user = await User.create({
       username: req.body.username,
@@ -11,6 +11,7 @@ const signup = async (req, res) => {
     });
 
     res.status(201).json({ message: "Welcome New User! ", user: user });
+    next();
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
   }
