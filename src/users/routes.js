@@ -7,9 +7,10 @@ const { addProfile } = require("../profiles/controllers");
 
 const { signup, login, getAllUsers, getUser } = require("./controllers");
 
-userRouter.post("/users/signup", signup, hashPass);
 
-userRouter.post("/users/login", login, comparePass);
+userRouter.post("/users/signup", hashPass, signup);
+
+userRouter.post("/users/login", comparePass, login);
 
 userRouter.get("/users/getUser", getUser);
 
