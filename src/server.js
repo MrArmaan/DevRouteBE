@@ -4,6 +4,8 @@ const User = require("./users/model");
 const userRouter = require("./users/routes");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const login = require("./users/controllers");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -12,30 +14,28 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-let appliedJobs = [];
+app.post("/users/login", async (req, res) => {
+  const { username, password } = req.body;
 
-app.post("/api/applyForJob", (req, res) => {
-  const { jobId } = req.body;
+  try {
+    const user = await User.findOne({ where: { username } });
 
-  if (!jobId) {
-    return res.status(400).json({ error: "Job ID is required." });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid username or password" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid username or password" });
+    }
+
+    res.status(200).json({ message: "Login successful", user });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ error: "An error occurred during login" });
   }
-
-  if (appliedJobs.includes(jobId)) {
-    return res.status(400).json({ error: "Job already applied for." });
-  }
-
-  appliedJobs.push(jobId);
-  return res.status(200).json({ message: "Job application successful." });
 });
-
-const syncTables = async () => {
-  Profile.hasOne(User);
-  User.belongsTo(Profile);
-
-  Profile.sync();
-  User.sync();
-};
 
 app.use(userRouter);
 
@@ -44,6 +44,5 @@ app.get("/health", (req, res) => {
 });
 
 app.listen(port, () => {
-  syncTables();
   console.log(`Server is running on port ${port}`);
 });
