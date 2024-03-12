@@ -1,5 +1,7 @@
 const User = require("./model");
 const express = require("express");
+const jwt = require("jsonwebtoken");
+
 const router = express.Router();
 
 const signup = async (req, res, next) => {
@@ -9,9 +11,9 @@ const signup = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
     });
-    req.user = user;
+    // req.user = user;
 
-    // res.status(201).json({ message: "Welcome New User! ", user: user });
+    res.status(201).json({ message: "Welcome New User! ", user: user });
     next();
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
@@ -27,11 +29,42 @@ const getAllUsers = async (re, res) => {
   }
 };
 
+// const login = async (req, res) => {
+//   try {
+//     res.status(200).json({ message: "login successful", user: req.user });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message, error: error });
+//   }
+// };
+
 const login = async (req, res) => {
   try {
-    res.status(200).json({ message: "login successful", user: req.user });
-  } catch (error) {
-    res.status(500).json({ message: error.message, error: error });
+    if (req.authCheck) {
+      const user = {
+        id: req.authCheck.id,
+        username: req.authCheck.username,
+      };
+
+      res
+        .status(201)
+        .json({ message: "persistent login successful", user: user });
+      return;
+    }
+
+    const token = await jwt.sign({ id: req.user.id }, process.env.SECRET);
+
+    console.log(token);
+
+    const user = {
+      id: req.user.id,
+      username: req.user.username,
+      token: token,
+    };
+    console.log(user);
+
+    res.status(201).json({ message: "hello from the BE", user: user });
+  } catch (err) {
+    res.status(500).json({ message: err.message, err: err });
   }
 };
 
