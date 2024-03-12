@@ -1,9 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const User = require("./users/model");
-const Profile = require("./profiles/model");
 const userRouter = require("./users/routes");
-const profileRouter = require("./profiles/routes");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -40,7 +38,6 @@ const syncTables = async () => {
 };
 
 app.use(userRouter);
-app.use(profileRouter);
 
 app.get("/health", (req, res) => {
   res.status(200).json({ message: "Server is running" });
