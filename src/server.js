@@ -5,17 +5,31 @@ const Profile = require("./profiles/model");
 const userRouter = require("./users/routes");
 const profileRouter = require("./profiles/routes");
 const cors = require("cors");
-
-const port = process.env.PORT || 5001;
+const bodyParser = require("body-parser");
 
 const app = express();
+const port = process.env.PORT || 5001;
 
 app.use(cors());
-
 app.use(express.json());
+app.use(bodyParser.json());
 
-app.use(userRouter);
-app.use(profileRouter);
+let appliedJobs = [];
+
+app.post("/api/applyForJob", (req, res) => {
+  const { jobId } = req.body;
+
+  if (!jobId) {
+    return res.status(400).json({ error: "Job ID is required." });
+  }
+
+  if (appliedJobs.includes(jobId)) {
+    return res.status(400).json({ error: "Job already applied for." });
+  }
+
+  appliedJobs.push(jobId);
+  return res.status(200).json({ message: "Job application successful." });
+});
 
 const syncTables = async () => {
   Profile.hasOne(User);
@@ -24,6 +38,9 @@ const syncTables = async () => {
   Profile.sync();
   User.sync();
 };
+
+app.use(userRouter);
+app.use(profileRouter);
 
 app.get("/health", (req, res) => {
   res.status(200).json({ message: "Server is running" });

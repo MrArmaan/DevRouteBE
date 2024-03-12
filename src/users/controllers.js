@@ -11,7 +11,7 @@ const signup = async (req, res, next) => {
     });
     req.user = user;
 
-    // res.status(201).json({ message: "Welcome New User! ", user: user });
+    res.status(201).json({ message: "Welcome New User! ", user: user });
     next();
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
