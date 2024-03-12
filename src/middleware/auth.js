@@ -26,7 +26,7 @@ const comparePass = async (req, res, next) => {
 
     const passwordMatch = await bcrypt.compare(
       req.body.password,
-      user.password
+      user.user.password
     );
 
     if (!passwordMatch) {

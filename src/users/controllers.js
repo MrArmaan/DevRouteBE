@@ -11,7 +11,7 @@ const signup = async (req, res, next) => {
     });
     req.user = user;
 
-    res.status(201).json({ message: "Welcome New User! ", user: user });
+    res.status(201).json({ message: "Welcome New User!", user: user });
     next();
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });
@@ -31,7 +31,8 @@ const login = async (req, res) => {
   try {
     res.status(200).json({ message: "login successful", user: req.user });
   } catch (error) {
-    res.status(500).json({ message: error.message, error: error });
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "An error occurred during login" });
   }
 };
 
