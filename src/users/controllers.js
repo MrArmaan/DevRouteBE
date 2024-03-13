@@ -1,4 +1,5 @@
 const User = require("./model");
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
 
@@ -11,7 +12,6 @@ const signup = async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
     });
-    // req.user = user;
 
     res.status(201).json({ message: "Welcome New User! ", user: user });
     next();
@@ -29,76 +29,6 @@ const getAllUsers = async (re, res) => {
   }
 };
 
-// const login = async (req, res) => {
-//   try {
-//     res.status(200).json({ message: "login successful", user: req.user });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message, error: error });
-//   }
-// };
-
-const login = async (req, res) => {
-  try {
-    if (req.authCheck) {
-      const user = {
-        id: req.authCheck.id,
-        username: req.authCheck.username,
-      };
-
-      res
-        .status(201)
-        .json({ message: "persistent login successful", user: user });
-      return;
-    }
-
-    const token = await jwt.sign({ id: req.user.id }, process.env.SECRET);
-
-    console.log(token);
-
-    const user = {
-      id: req.user.id,
-      username: req.user.username,
-      token: token,
-    };
-    console.log(user);
-
-    res.status(201).json({ message: "hello from the BE", user: user });
-  } catch (err) {
-    res.status(500).json({ message: err.message, err: err });
-  }
-};
-
-// // Get user profile
-// router.get("/profile/:userId", async (req, res) => {
-//   try {
-//     const user = await dbClient.db
-//       .collection("users")
-//       .findOne({ _id: ObjectId(req.params.userId) });
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
-
-// // Update user profile
-// router.patch("/profile/:userId", async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const { username, email } = req.body;
-
-//     await dbClient.db
-//       .collection("users")
-//       .updateOne({ _id: ObjectId(userId) }, { $set: { username, email } });
-
-//     const updatedUser = await dbClient.db
-//       .collection("users")
-//       .findOne({ _id: ObjectId(userId) });
-//     res.json(updatedUser);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// });
-
 const getUser = async (re, res) => {
   try {
     const users = await User.findOne();
@@ -108,9 +38,24 @@ const getUser = async (re, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const userToDestroy = await User.destroy({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    console.log("user deleted:", userToDestroy);
+    res.send({ message: "user deleted", userToDestroy: userToDestroy });
+  } catch (error) {
+    res.send({ message: "its gone pete tong", error: error });
+  }
+};
+
 module.exports = {
   signup: signup,
   getAllUsers: getAllUsers,
-  login: login,
   getUser: getUser,
+  deleteUser: deleteUser,
 };

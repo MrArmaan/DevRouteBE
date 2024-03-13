@@ -18,12 +18,22 @@ app.use(userRouter);
 app.use(profileRouter);
 
 const syncTables = async () => {
-  Profile.hasOne(User);
-  User.belongsTo(Profile);
+  User.hasOne(Profile);
+  Profile.belongsTo(User);
 
-  Profile.sync();
   User.sync();
+  Profile.sync();
 };
+
+// User.findOne({
+//   include: [
+//     {
+//       model: Profile,
+//     },
+//   ],
+// }).then((userWithProfile) => {
+//   console.log(userWithProfile);
+// });
 
 app.get("/health", (req, res) => {
   res.status(200).json({ message: "Server is running" });

@@ -10,10 +10,10 @@ const addProfile = async (req, res) => {
       profile2: req.body.profile2,
       profile3: req.body.profile3,
     });
-    const updatedUser = await User.update(
-      { ProfileId: profile.id },
-      { where: { id: req.user.id } }
-    );
+    // const updatedUser = await User.update(
+    //   { ProfileId: profile.id },
+    //   { where: { id: req.user.id } }
+    // );
     res.status(201).json({ message: "Welcome New User!", profile: profile });
   } catch (error) {
     res.status(500).json({ message: error.message, error: error });

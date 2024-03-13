@@ -5,6 +5,37 @@ const User = require("../users/model");
 
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
+const login = async (req, res) => {
+  try {
+    if (req.authCheck) {
+      const user = {
+        id: req.authCheck.id,
+        username: req.authCheck.username,
+      };
+
+      res
+        .status(201)
+        .json({ message: "persistent login successful", user: user });
+      return;
+    }
+
+    const token = await jwt.sign({ id: req.user.id }, process.env.SECRET);
+
+    console.log(token);
+
+    const user = {
+      id: req.user.id,
+      username: req.user.username,
+      token: token,
+    };
+    console.log(user);
+
+    res.status(201).json({ message: "hello from the BE", user: user });
+  } catch (err) {
+    res.status(500).json({ message: err.message, err: err });
+  }
+};
+
 const hashPass = async (req, res, next) => {
   try {
     console.log("req.body.password", req.body.password);
@@ -77,6 +108,8 @@ const tokenCheck = async (req, res, next) => {
 };
 ////////////////////////
 module.exports = {
+  login: login,
+
   hashPass: hashPass,
   comparePass: comparePass,
   tokenCheck: tokenCheck,
